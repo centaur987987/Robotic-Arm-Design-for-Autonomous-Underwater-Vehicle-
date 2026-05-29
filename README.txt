@@ -1,0 +1,1 @@
+This GitHub repository contains the MATLAB code and SOLIDWORKS CAD files for the 'Robotic Arm Design for Autonomous Underwater Vehicle ' capstone project.
