@@ -1,151 +1,257 @@
 % Name: Andrew Centa
 % Objective: Plot the reachable workspaces for each position given 
-% length and angle inputs
 
-%% Lengths
+% Code operates like a computational notebook.
+
+% postional equation are pulled from Jacobian_Analysis.m Forward Kinematics
+
+% Section 1: Length inputs
+% Section 2: Reachable workspace code for Collection Position
+% Section 3: Rechable workspace code for loading position
+% Section 4: Code to draw full linkage. Defaults to stowed position
+% Section 5: function for plotting Reachable Workspace referenced
+
+%% Section 1: Lengths
 % Length Variables
 L1=100;
 L2=450;
 L3=510;
 L4=380;
 
-%% Code for Collection Position
+%% Section 2: Reachable Workspace Code for Collection Position
 close all
 
 % Angle range variables
-theta_1=90;
-theta_2=[-8:-1:-90];  
-theta_3=[-8:-1:-140]; 
+theta_1=[30:5:330];
+theta_2=-90;  
+theta_3=[-90:5:-8]; 
+theta_4 = [-90: 5: -8];
 
 % Prismatic range
-dL4=[1:1:L4];
+d5=[1:5:L4];
 
-PlotReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, dL4)
+% 3D Plot
+Plot3DReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, theta_4, d5)
 
-%% Code for storing position
+%% Section 3: Reachable Workspace Code for storing position
 close all
 
 % Angle range variables
-theta_1=180;
-theta_2=[-8:-1:-140];  
-theta_3=[-8:-1:-160]; 
+theta_1=[0, 180];
+theta_2=0;  
+theta_3 = [-140 :5:-8]; 
+theta_4 = [-160: 5: -8]; 
 
 % Prismatic range
-dL4=[1:1:50];
+d5=[0:5:50];
 
-% ndgrid
-PlotReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, dL4)
-hold on
-plotStorage()
+% 3D plot
+Plot3DReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, theta_4, d5)
 
-%% Code for Storage Position
+%% Section 4: Draw 6 linkage
 close all
+clear
+% Link Lengths
+a2 = 100;     % Length of Link 3 
+a3 = 450;     % Length of Link 4
+a4 = 510;     % Length of Link 5
+% ACTUAL STORED INPUTS FOR PRINTING
+t1 = 180;     % Base 3D rotation
+t2 = 0;       % link 1 angle
+t3 = -8.96;   % link 2 angle
+t4 = -171.24; % link 3 angle
+d  = 0;       % Stowed prismatic extension distance (d5)
 
-% Angle range variables (Static point)
-theta_1=180;
-theta_2=[-8.96];
-theta_3=[-171.24];
+% Cumulative Compound Angles for Coordinate Frame Math 
+% From Jacobian_Analysis Forward Kinematics
+t23 = t2 + t3;
+t234 = t2 + t3 + t4;
 
-%theta_1=[0:5:90];
-%theta_2=[-8:-5:-90];  
-%theta_3=[-8:-5:-140]; 
+%   3D JOINT POSITION CALCULATIONS
+X0 = 0; Y0 = 0; Z0 = 0;
+
+% Link 1
+X1 = cosd(t1) * (a2 * cosd(t2));
+Y1 = sind(t1) * (a2 * cosd(t2));
+Z1 = -(a2 * sind(t2));
+
+% Link 2
+X2 = X1 + cosd(t1) * (a3 * cosd(t23));
+Y2 = Y1 + sind(t1) * (a3 * cosd(t23));
+Z2 = Z1 - (a3 * sind(t23));
+
+% Link 3
+X3 = X2 + cosd(t1) * (a4 * cosd(t234));
+Y3 = Y2 + sind(t1) * (a4 * cosd(t234));
+Z3 = Z2 - (a4 * sind(t234));
+
+% End-Effector Calculation
+Px_factor = a2*cosd(t2) + a3*cosd(t23) + a4*cosd(t234) - d*sind(t234);
+
+X4 = cosd(t1) * Px_factor;
+Y4 = sind(t1) * Px_factor;
+Z4 = -a2*sind(t2) - a3*sind(t23) - a4*sind(t234) - d*cosd(t234);
 
 
-% Prismatic range (Static point)
-dL4=[1];
-
-% Origin (Base Joint 1)
-X0 = 0;
-Y0 = 0;
-
-% Joint 2 Position (End of Link 1)
-X1 = L1 * cosd(theta_1);
-Y1 = L1 * sind(theta_1);
-
-% Joint 3 Position (End of Link 2)
-X2 = X1 + L2 * cosd(theta_1 + theta_2);
-Y2 = Y1 + L2 * sind(theta_1 + theta_2);
-
-% End-Effector Position (End of Link 3 + Prismatic extension dL4)
-X3 = X2 + (L3 + dL4) * cosd(theta_1 + theta_2 + theta_3);
-Y3 = Y2 + (L3 + dL4) * sind(theta_1 + theta_2 + theta_3);
-
-% --- PLOTTING ---
-
-figure;
+% Plotting
+figure('Color', [1 1 1]);
 hold on;
 
-% 1. Plot the linkage lines (Connects points sequentially: Base -> J2 -> J3 -> Tip)
-plot([X0, X1, X2, X3], [Y0, Y1, Y2, Y3], 'r-o', 'LineWidth', 3, 'MarkerSize', 8, 'MarkerFaceColor', 'k');
+% Vectors for the Plot
+all_X = [X0, X1, X2, X3, X4];
+all_Y = [Y0, Y1, Y2, Y3, Y4];
+all_Z = [Z0, Z1, Z2, Z3, Z4];
 
-% 2. Keep your original end-effector scatter point on top for tracking consistency
-scatter(X3, Y3, 40, 'b', 'filled'); 
-hold on 
-plotAUV()
+% End effector tip blue
+scatter3(X4, Y4, Z4, 60, [0.2, 0.4, 0.6], 'filled');
 
-title('Robot Linkage Stowed Position')
-xlabel('X Position [mm]')
-ylabel('Y Position [mm]')
-grid on
-axis equal
+% Origin green
+plot3(0, 0, 0, 'go', 'MarkerSize', 10, 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
 
-% Expand plot boundaries slightly so the line segments are clearly visible
-xlim([min([X0,X1,X2,X3])-100, max([X0,X1,X2,X3])+225]);
-ylim([min([Y0,Y1,Y2,Y3])-125, max([Y0,Y1,Y2,Y3])+100]);
+% AUV body
+vertices = [
+     200,  -100, -100;
+     200,   100, -100;
+     200,   100,  100;
+     200,  -100,  100;
+    -800,  -100, -100;
+    -800,   100, -100;
+    -800,   100,  100;
+    -800,  -100,  100
+];
+faces = [
+    1, 2, 3, 4;  5, 6, 7, 8;  1, 2, 6, 5;
+    2, 3, 7, 6;  3, 4, 8, 7;  4, 1, 5, 8
+];
+patch('Vertices', vertices, 'Faces', faces, ...
+    'FaceColor', [0.5, 0.5, 0.5], ...
+    'FaceAlpha', 0.4, ...
+    'EdgeColor', 'k', ...
+    'LineWidth', 1.5);
 
-%% Reachable Workspace Function
+% Dynamic Padding
+pad = 150;
+xlim([min(all_X) - pad, max(all_X) + pad]);
+ylim([min(all_Y) - pad, max(all_Y) + pad]);
+zlim([min(all_Z) - pad, max(all_Z) + pad]);
 
-function PlotReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, dL4)
-    % ndgrid
-    [T1, T2, T3, DL4] = ndgrid(theta_1, theta_2, theta_3, dL4);
+grid on;
+axis equal;
+view(45, 30);
+
+% Axis font and color
+ax = gca;
+ax.FontSize = 14;
+ax.FontWeight = 'bold';
+ax.XColor = [0 0 0];
+ax.YColor = [0 0 0];
+ax.ZColor = [0 0 0];
+ax.GridColor = [0 0 0];
+ax.GridAlpha = 0.3;
+ax.Color = [0.95 0.95 0.95];
+
+% Title and labels
+title('Stowed Position', 'FontSize', 18, 'FontWeight', 'bold', 'Color', 'k');
+xlabel('X Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+ylabel('Y Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+zlabel('Z Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+
+% White figure background
+set(gcf, 'Color', [1 1 1]);
+
+%% Section 5: Plot 3D Reachable Workspace
+function Plot3DReachableWorkspace(a2, a3, a4, theta_1, theta_2, theta_3, theta_4, d5)
     
-    % Pre-calculate T12 and T123
-    T12  = T1 + T2;
-    T123 = T1 + T2 + T3;
-    
-    % Forward kinematic equations
-    X_all = L1*cosd(T1) + L2*cosd(T12) + (L3 + DL4).*cosd(T123);
-    Y_all = L1*sind(T1) + L2*sind(T12) + (L3 + DL4).*sind(T123);
-    % Flatten matrices into 1D vectors for plotting
-    X_flat = X_all(:);
-    Y_flat = Y_all(:);
-    
-    % Plot as scatter plot
-    figure;
-    scatter(X_flat, Y_flat, 2, 'b', 'filled'); 
-    % hold on for AUV rectangle
+total_points = length(theta_1) * length(theta_2) * length(theta_3) * length(theta_4) * length(d5);
+    X = zeros(1, total_points); Y = zeros(1, total_points); Z = zeros(1, total_points);
+    counter = 1;
+
+    % Loop through variable ranges to plot all scatter points
+    for t1 = theta_1
+        for t2 = theta_2
+            for t3 = theta_3
+                for t4 = theta_4
+                    for d = d5
+                        % shorthand equations to shorten statements
+                        t23 = t2 + t3;
+                        t234 = t2 + t3 + t4;
+                        Px_factor = a2*cosd(t2) + a3*cosd(t23) + a4*cosd(t234) - d*sind(t234);
+
+                        X(counter) = cosd(t1) * Px_factor;
+                        Y(counter) = sind(t1) * Px_factor;
+                        Z(counter) = -a2*sind(t2) - a3*sind(t23) - a4*sind(t234) - d*cosd(t234);
+                        counter = counter + 1;
+                    end
+                end
+            end
+        end
+    end
+    X = X(1:counter-1); Y = Y(1:counter-1); Z = Z(1:counter-1);
+
+
+    % Find workspace volume
+    % Uses a tight boundary envelope to calculate volume for non-convex point clouds
+    [~, ws_volume] = boundary(X(:), Y(:), Z(:));
+    fprintf('Calculated Reachable Workspace Volume:\n');
+    fprintf('  %.2f mm^3\n', ws_volume);
+    fprintf('  %.5f m^3\n', ws_volume * 1e-9); % Converts mm^3 to m^3
+
+    % 3D Plotting
+    figure('Color', [1 1 1]);
+    plotColor = [0.2, 0.4, 0.6];
+    scatter3(X, Y, Z, 3, plotColor, 'filled', 'MarkerFaceAlpha', 0.1);
     hold on;
-    % plot AUV rectangle
-    plotAUV();
 
-    title('Reachable Workspace')
-    xlabel('X Position [mm]')
-    ylabel('Y Position [mm]')
-    grid on
-    axis equal
+    % Representative AUV
+    vertices = [
+         200,  -100, -100;
+         200,   100, -100;
+         200,   100,  100;
+         200,  -100,  100;
+        -800,  -100, -100;
+        -800,   100, -100;
+        -800,   100,  100;
+        -800,  -100,  100
+    ];
+    faces = [
+        1, 2, 3, 4;  5, 6, 7, 8;  1, 2, 6, 5;
+        2, 3, 7, 6;  3, 4, 8, 7;  4, 1, 5, 8
+    ];
+    patch('Vertices', vertices, 'Faces', faces, ...
+        'FaceColor', [0.5, 0.5, 0.5], ...
+        'FaceAlpha', 0.4, ...
+        'EdgeColor', 'k', ...
+        'LineWidth', 1.5);
+
+    % Origin green dot
+    plot3(0, 0, 0, 'go', ...
+        'MarkerSize', 10, ...
+        'MarkerFaceColor', 'g', ...
+        'MarkerEdgeColor', 'k', ...
+        'LineWidth', 1.5);
+
+    grid on; axis equal; view(45, 30);
+
+    % Axis font and color
+    ax = gca;
+    ax.FontSize = 14;
+    ax.FontWeight = 'bold';
+    ax.XColor = [0 0 0];
+    ax.YColor = [0 0 0];
+    ax.ZColor = [0 0 0];
+    ax.GridColor = [0 0 0];
+    ax.GridAlpha = 0.3;
+    ax.Color = [0.95 0.95 0.95];
+
+    % Title and labels
+    title('Reachable Workspace', 'FontSize', 18, 'FontWeight', 'bold', 'Color', 'k');
+    xlabel('X Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+    ylabel('Y Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+    zlabel('Z Position [mm]', 'FontSize', 16, 'FontWeight', 'bold', 'Color', 'k');
+
+    % White figure background
+    set(gcf, 'Color', [1 1 1]);
 end
 
-% plot the AUV
-function plotAUV()
-    % Position: [Left_X, Bottom_Y, Width, Height]
-    rectPos = [-700, -100, 900, 200]; 
-    
-    % Plot the rectangle
-    rectangle('Position', rectPos, 'EdgeColor', 'c', 'LineWidth', 2);
-    
-    % Optional: Label the origin (0,0) for reference
-    hold on;
-    plot(0, 0, 'gx', 'MarkerSize', 10, 'LineWidth', 2);
-    %text(-50, 0, 'BASE', 'HorizontalAlignment', 'right', 'Color', 'g');
-    text(-750, 0, 'AUV', 'HorizontalAlignment', 'right', 'Color', 'c');
-    hold off;
-end
 
-% Plot the storage volume
-function plotStorage()
-    % Position: [Left_X, Bottom_Y, Width, Height]
-    rectPos = [75, 0, 75, 100]; 
-    
-    % Plot the rectangle
-    rectangle('Position', rectPos, 'EdgeColor', 'r', 'LineWidth', 2);
-end
+
