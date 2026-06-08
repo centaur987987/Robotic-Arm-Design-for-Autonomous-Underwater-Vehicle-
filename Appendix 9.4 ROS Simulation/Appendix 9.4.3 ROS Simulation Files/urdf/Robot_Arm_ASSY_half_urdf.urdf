@@ -3,22 +3,22 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="robot_arm_udrf">
+  name="Robot_Arm_ASSY_half_urdf">
   <link
     name="base_link">
     <inertial>
       <origin
-        xyz="-0.34165 0.033714 0.0477"
+        xyz="-0.376106625180625 -0.00358312329472308 -0.0452575370845516"
         rpy="0 0 0" />
       <mass
-        value="11.607" />
+        value="47.7301508686849" />
       <inertia
-        ixx="0.019077"
-        ixy="-0.0059616"
-        ixz="-0.002206"
-        iyy="0.57915"
-        iyz="-0.0022209"
-        izz="0.57135" />
+        ixx="0.20277785181799"
+        ixy="0.00963091634685365"
+        ixz="0.187033116269051"
+        iyy="3.97093461926187"
+        iyz="0.0117080670069053"
+        izz="3.98654242190741" />
     </inertial>
     <visual>
       <origin
@@ -26,12 +26,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/base_link.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.89804 0.91765 0.92941 1" />
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
       </material>
     </visual>
     <collision>
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/base_link.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -48,17 +48,17 @@
     name="link_2">
     <inertial>
       <origin
-        xyz="-7.2398E-06 0.010411 -2.3341E-08"
+        xyz="-7.23976911706087E-06 0.0104107184650963 -2.334089249309E-08"
         rpy="0 0 0" />
       <mass
-        value="0.026759" />
+        value="0.0267586704788677" />
       <inertia
-        ixx="4.2875E-06"
-        ixy="1.5615E-09"
-        ixz="2.6524E-11"
-        iyy="3.5517E-06"
-        iyz="-7.1209E-13"
-        izz="3.0712E-06" />
+        ixx="4.28747099957771E-06"
+        ixy="1.56148292107742E-09"
+        ixz="2.65242305529344E-11"
+        iyy="3.55174067185821E-06"
+        iyz="-7.12086832586899E-13"
+        izz="3.071173238022E-06" />
     </inertial>
     <visual>
       <origin
@@ -66,12 +66,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_2.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_2.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.89804 0.91765 0.92941 1" />
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
       </material>
     </visual>
     <collision>
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_2.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -88,7 +88,7 @@
     name="joint_1"
     type="continuous">
     <origin
-      xyz="0 0 0.014334"
+      xyz="0.03135 0.022079 0"
       rpy="1.5708 0 0" />
     <parent
       link="base_link" />
@@ -106,17 +106,17 @@
     name="link_3">
     <inertial>
       <origin
-        xyz="-0.044274 -1.0408E-17 0"
+        xyz="-0.0442741391131842 -1.04083408558608E-17 0"
         rpy="0 0 0" />
       <mass
-        value="0.1963" />
+        value="0.196297763055837" />
       <inertia
-        ixx="3.0994E-05"
-        ixy="-3.1073E-20"
-        ixz="-1.5119E-20"
-        iyy="0.00021929"
-        iyz="8.7195E-22"
-        izz="0.00021667" />
+        ixx="3.09944539010786E-05"
+        ixy="-3.06777436339869E-20"
+        ixz="-1.54056923885657E-20"
+        iyy="0.000219288644587645"
+        iyz="8.71950904172476E-22"
+        izz="0.000216665314030348" />
     </inertial>
     <visual>
       <origin
@@ -124,12 +124,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_3.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_3.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="1 0.75294 1 1" />
+          rgba="1 0.752941176470588 1 1" />
       </material>
     </visual>
     <collision>
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_3.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_3.STL" />
       </geometry>
     </collision>
   </link>
@@ -164,17 +164,17 @@
     name="link_4">
     <inertial>
       <origin
-        xyz="-0.19518 -1.4919E-16 -1.7347E-17"
+        xyz="-0.195177244260054 -1.56125112837913E-16 -1.73472347597681E-17"
         rpy="0 0 0" />
       <mass
-        value="0.74143" />
+        value="0.741427763055838" />
       <inertia
-        ixx="0.00012459"
-        ixy="-8.2908E-18"
-        ixz="3.2545E-18"
-        iyy="0.012188"
-        iyz="3.3139E-20"
-        izz="0.012174" />
+        ixx="0.000124587793901079"
+        ixy="-8.07391805322799E-18"
+        ixz="3.30217296958749E-18"
+        iyy="0.0121884973484229"
+        iyz="4.22136693189308E-20"
+        izz="0.0121740501778656" />
     </inertial>
     <visual>
       <origin
@@ -182,12 +182,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_4.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_4.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.89804 0.91765 0.92941 1" />
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
       </material>
     </visual>
     <collision>
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_4.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_4.STL" />
       </geometry>
     </collision>
   </link>
@@ -222,17 +222,17 @@
     name="link_5">
     <inertial>
       <origin
-        xyz="-0.27898 -0.0038989 -3.0531E-16"
+        xyz="-0.27897628170109 -0.00389885493262485 -3.05311331771918E-16"
         rpy="0 0 0" />
       <mass
-        value="1.0591" />
+        value="1.0590650202151" />
       <inertia
-        ixx="0.00020709"
-        ixy="2.1568E-07"
-        ixz="-1.5098E-17"
-        iyy="0.025035"
-        iyz="1.5732E-20"
-        izz="0.025057" />
+        ixx="0.000207092182812784"
+        ixy="2.15677712318495E-07"
+        ixz="-1.5100695198829E-17"
+        iyy="0.0250352184676771"
+        iyz="1.72064117371127E-20"
+        izz="0.0250566309214239" />
     </inertial>
     <visual>
       <origin
@@ -240,12 +240,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_5.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_5.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.75294 1 0.75294 1" />
+          rgba="0.752941176470588 1 0.752941176470588 1" />
       </material>
     </visual>
     <collision>
@@ -254,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_5.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_5.STL" />
       </geometry>
     </collision>
   </link>
@@ -280,17 +280,17 @@
     name="link_6">
     <inertial>
       <origin
-        xyz="3.9138E-09 0 0.18902"
+        xyz="3.91381642025901E-09 0 0.18902047022805"
         rpy="0 0 0" />
       <mass
-        value="0.15645" />
+        value="0.156447190374541" />
       <inertia
-        ixx="0.001866"
-        ixy="1.0044E-21"
-        ixz="-3.8556E-11"
-        iyy="0.001866"
-        iyz="3.1328E-20"
-        izz="3.9105E-06" />
+        ixx="0.00186599699109058"
+        ixy="1.0120044037081E-21"
+        ixz="-3.85559539579749E-11"
+        iyy="0.00186599699109058"
+        iyz="3.00900380477776E-20"
+        izz="3.9105393251952E-06" />
     </inertial>
     <visual>
       <origin
@@ -298,12 +298,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_6.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_6.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.89804 0.91765 0.92941 1" />
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
       </material>
     </visual>
     <collision>
@@ -312,7 +312,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_6.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_6.STL" />
       </geometry>
     </collision>
   </link>
@@ -338,17 +338,17 @@
     name="link_7">
     <inertial>
       <origin
-        xyz="-2.4286E-17 1.3878E-17 -0.010838"
+        xyz="-2.08166817117217E-17 0 -0.0108382091784279"
         rpy="0 0 0" />
       <mass
-        value="0.017016" />
+        value="0.0170160242741333" />
       <inertia
-        ixx="2.201E-06"
-        ixy="-2.275E-38"
-        ixz="-2.6344E-22"
-        iyy="2.6235E-06"
-        iyz="-1.3349E-23"
-        izz="2.2149E-06" />
+        ixx="2.20097044073708E-06"
+        ixy="-2.23123039584461E-38"
+        ixz="-2.35369460958683E-22"
+        iyy="2.62345798760739E-06"
+        iyz="-1.33490042628736E-23"
+        izz="2.21488099393225E-06" />
     </inertial>
     <visual>
       <origin
@@ -356,12 +356,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_7.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_7.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.89804 0.91765 0.92941 1" />
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
       </material>
     </visual>
     <collision>
@@ -370,13 +370,13 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_arm_udrf/meshes/link_7.STL" />
+          filename="package://Robot_Arm_ASSY_half_urdf/meshes/link_7.STL" />
       </geometry>
     </collision>
   </link>
   <joint
     name="joint_6"
-    type="revolute">
+    type="continuous">
     <origin
       xyz="0 0 0.376"
       rpy="3.1416 0 0" />

@@ -14,17 +14,16 @@ class ArmAnimator(Node):
         # joint order: [base_rotation, link3_vertical, link4, link5, prismatic, wrist]
         self.positions = {
             'stowed':          [0.0,        0.0,       0.0,        0.0,        0.0,     0.0],
-            'pre_collection':  [0.0,       -1.578,     0.0,        1.2,        0.0,     0.0],
-            'collection':      [1.0,       -1.578,     -0.5,       1.0,        0.3,     0.0],
-            'spin':            [-3.14159,   -1.578,     0.0,        0.7,        0.0,     0.0],
-            'pre_load':        [-3.142,    -3.142,     1.681,      0.934,      0.0,  0.0],
-            'loading':         [-3.142,    -3.142,     1.681,      0.934,      0.0934,  0.0],
+            'pre_collection':  [0.0,       -1.5708,    -0.357,        1.206,        0.0,     0.0],
+            'collection':      [1.5,       -1.5708,     -0.5,       1.0,        0.3,     0.0],
+            'pre_load':        [-3.142,    -1.5708,     -0.357,      1.206,      0.0,  0.0],
+            'loading':         [-3.142,   -1.5708,    -0.357,      1.206,      0.085,  0.0],
             
         }
 
     
     def publish_position(self, position):
-        msg = JointState()
+        msg = JointState() 
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.name = self.joint_names
         msg.position = position
@@ -56,7 +55,6 @@ class ArmAnimator(Node):
         pos_collection     = self.positions['collection']
         pos_loading        = self.positions['loading']
         pos_pre_collection = self.positions['pre_collection']
-        pos_spin           = self.positions['spin']
         pos_pre_load       = self.positions['pre_load']
 
 
@@ -77,30 +75,22 @@ class ArmAnimator(Node):
 
 
             print("4")
-            self.move(pos_pre_collection, pos_spin)
-            self.hold(pos_spin, 2.0)
+            self.move(pos_pre_collection, pos_pre_load)
+            self.hold(pos_pre_load, 2.0)
 
             print("5")
-            self.move(pos_spin, pos_pre_load)
-            self.hold(pos_pre_load, 2.0)
-           
-            print("6")
             self.move(pos_pre_load, pos_loading)
             self.hold(pos_loading, 2.0)
 
-            print("7")
+            print("6")
             self.move(pos_loading, pos_pre_load)
             self.hold(pos_pre_load, 2.0)
 
-            print("8")
-            self.move(pos_pre_load, pos_spin)
-            self.hold(pos_spin, 2.0)
-
-            print("9")
-            self.move(pos_spin, pos_pre_collection)
+            print("7")
+            self.move(pos_pre_load, pos_pre_collection)
             self.hold(pos_pre_collection, 2.0)       
 
-            print("10")
+            print("8")
             self.move(pos_pre_collection, pos_stowed)
             self.hold(pos_stowed, 2.0)           
 

@@ -15,44 +15,46 @@ close all
 
 %% Section 1: Forward Kinematics 
 
-syms th1 th2 th3 th4 th6 a2 a3 a4 d5 real % Set Variables
+syms th1 th2 th3 th4 th6 a3 a4 a5 d5 real % Set Variables
 
 % Enter transformation matrices from Appendix 9.1.2
-T01 = [cos(th1), 0, -sin(th1), 0; sin(th1), 0, cos(th1), 0; 0, -1, 0, 0; 0, 0, 0, 1];
+T12 = [cos(th1), 0, -sin(th1), 0; sin(th1), 0, cos(th1), 0; 0, -1, 0, 0; 0, 0, 0, 1];
 
-T12 = [cos(th2), -sin(th2), 0, a2*cos(th2); sin(th2), cos(th2), 0, a2*sin(th2); 0, 0, 1, 0; 0, 0, 0, 1];
+T23 = [cos(th2), -sin(th2), 0, a3*cos(th2); sin(th2), cos(th2), 0, a3*sin(th2); 0, 0, 1, 0; 0, 0, 0, 1];
 
-T23 = [cos(th3), -sin(th3), 0, a3*cos(th3); sin(th3), cos(th3), 0, a3*sin(th3); 0, 0, 1, 0; 0, 0, 0, 1];
+T34 = [cos(th3), -sin(th3), 0, a4*cos(th3); sin(th3), cos(th3), 0, a4*sin(th3); 0, 0, 1, 0; 0, 0, 0, 1];
 
-T34 = [cos(th4), 0, -sin(th4), a4*cos(th4); sin(th4), 0, cos(th4), a4*sin(th4); 0, -1, 0, 0; 0, 0, 0, 1];
+T45 = [cos(th4), 0, -sin(th4), a5*cos(th4); sin(th4), 0, cos(th4), a5*sin(th4); 0, -1, 0, 0; 0, 0, 0, 1];
 
-T45 = [1, 0, 0, 0; 0, 0, -1, 0; 0, 1, 0, d5; 0, 0, 0, 1];
+T56 = [1, 0, 0, 0; 0, 0, -1, 0; 0, 1, 0, d5; 0, 0, 0, 1];
 
-T56 = [cos(th6), -sin(th6), 0, 0; sin(th6), cos(th6), 0, 0; 0, 0, 1, 0; 0, 0, 0, 1];
+T67 = [cos(th6), -sin(th6), 0, 0; sin(th6), cos(th6), 0, 0; 0, 0, 1, 0; 0, 0, 0, 1];
 
 % Eaquation (6)
-T06 = simplify(T01 * T12 * T23 * T34 * T45 * T56)
+T17 = simplify(T12 * T23 * T34 * T45 * T56 * T67)
+
+pretty(T17)
 
 %% Section 2: Jacobian
 % Cumulative transformations
-T02 = T01 * T12;
-T03 = T02 * T23;
-T04 = T03 * T34;
-T05 = T04 * T45;
-T06 = simplify(T05 * T56);
+T02 = T12 * T23;
+T03 = T02 * T34;
+T04 = T03 * T45;
+T05 = T04 * T56;
+T17 = simplify(T05 * T67);
 
 % Define the 6 joint variables vector
 q = [th1, th2, th3, th4, d5, th6];
 
 % Compute Linear Velocity Jacobian (Jv)
 % The partial derivatives automatically scale correctly for the prismatic joint
-p06 = T06(1:3, 4); %  positional components from forward kinematics
+p06 = T17(1:3, 4); %  positional components from forward kinematics
 Jv = jacobian(p06, q);
 
 % Compute Angular Velocity Jacobian (Jw)
 % Extract z-axes from the transformation matrices
 z0 = [0; 0; 1];           % Base frame z-axis (Joint 1)
-z1 = T01(1:3, 3);         % Joint 2 axis
+z1 = T12(1:3, 3);         % Joint 2 axis
 z2 = T02(1:3, 3);         % Joint 3 axis
 z3 = T03(1:3, 3);         % Joint 4 axis
 z4 = [0; 0; 0];           % Joint 5 is prismatic -> no angular velocity contribution
@@ -66,13 +68,13 @@ J = simplify(J)
 pretty(J)
 
 %% Section 3: positional jacobian and Manipulability
-p = T06(1:3, 4); %  positional components from forward kinematics
+p = T17(1:3, 4); %  positional components from forward kinematics
 p = simplify(p);
 
 q = [th1 th2 th3 th4 d5 th6];
 
 Jp = simplify(jacobian(p,q))
-%pretty(Jp)
+pretty(Jp')
 % Manipulability (Yoshikawa measure)
 gramian = Jp * Jp';              % 3x3 symmetric positive semi-definite matrix
 %pretty(gramian)
@@ -81,9 +83,9 @@ m = simplify(det(gramian))
 
 
 %% Section 4: Manipulability Plot
-a2_val = 100; a3_val = 450; a4_val = 510; d5_val = 0; % inputs
+a3_val = 100; a4_val = 450; a5_val = 510; d5_val = 0; % inputs
 
-m_num = subs(m, [a2, a3, a4, d5], [a2_val, a3_val, a4_val, d5_val]);
+m_num = subs(m, [a3, a4, a5, d5], [a3_val, a4_val, a5_val, d5_val]);
 m_num = subs(m_num, th1, 0);   % fix th1 = 0
 
 % Convert to fast numeric function of (th2, th3, th4)

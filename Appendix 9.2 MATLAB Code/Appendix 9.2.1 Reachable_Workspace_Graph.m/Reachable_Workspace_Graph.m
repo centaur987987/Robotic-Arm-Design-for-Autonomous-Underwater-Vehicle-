@@ -13,49 +13,65 @@
 
 %% Section 1: Lengths
 % Length Variables
-L1=100;
-L2=450;
-L3=510;
-L4=380;
+L3=100;
+L4=450;
+L5=510;
+L6=380;
 
 %% Section 2: Reachable Workspace Code for Collection Position
 close all
 
 % Angle range variables
-theta_1=[30:5:330];
+theta_1=[30:10:330];
 theta_2=-90;  
-theta_3=[-90:5:-8]; 
-theta_4 = [-90: 5: -8];
+theta_3=[-90:10:-8]; 
+theta_4 = [-90: 10: -8];
 
 % Prismatic range
-d5=[1:5:L4];
+d5=[1:5:L6];
 
 % 3D Plot
-Plot3DReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, theta_4, d5)
+Plot3DReachableWorkspace(L3, L4, L5, theta_1, theta_2, theta_3, theta_4, d5)
 
 %% Section 3: Reachable Workspace Code for storing position
 close all
 
 % Angle range variables
-theta_1=[0, 180];
-theta_2=0;  
-theta_3 = [-140 :5:-8]; 
-theta_4 = [-160: 5: -8]; 
+theta_1=[180];
+theta_2=-90;  
+theta_3 = [30 :2: 80]; 
+theta_4 = [8: 2: 100]; 
 
 % Prismatic range
-d5=[0:5:50];
+d5=[0:2:50];
 
 % 3D plot
-Plot3DReachableWorkspace(L1, L2, L3, theta_1, theta_2, theta_3, theta_4, d5)
+Plot3DReachableWorkspace(L3, L4, L5, theta_1, theta_2, theta_3, theta_4, d5)
+
+%% Section 3.5: Reachable Workspace Code for storing position (front side)
+close all
+
+% Angle range variables
+theta_1=[180];
+theta_2= 0;  
+theta_3 = [-120 :2: -8]; 
+theta_4 = [-160: 2: -8]; 
+
+% Prismatic range
+d5=[0:2:50];
+
+% 3D plot
+Plot3DReachableWorkspace(L3, L4, L5, theta_1, theta_2, theta_3, theta_4, d5)
 
 %% Section 4: Draw 6 linkage
 close all
 clear
 % Link Lengths
-a2 = 100;     % Length of Link 3 
-a3 = 450;     % Length of Link 4
-a4 = 510;     % Length of Link 5
+a3 = 100;     % Length of Link 3 
+a4 = 450;     % Length of Link 4
+a5 = 510;     % Length of Link 5
 % ACTUAL STORED INPUTS FOR PRINTING
+
 t1 = 180;     % Base 3D rotation
 t2 = 0;       % link 1 angle
 t3 = -8.96;   % link 2 angle
@@ -71,26 +87,26 @@ t234 = t2 + t3 + t4;
 X0 = 0; Y0 = 0; Z0 = 0;
 
 % Link 1
-X1 = cosd(t1) * (a2 * cosd(t2));
-Y1 = sind(t1) * (a2 * cosd(t2));
-Z1 = -(a2 * sind(t2));
+X1 = cosd(t1) * (a3 * cosd(t2));
+Y1 = sind(t1) * (a3 * cosd(t2));
+Z1 = -(a3 * sind(t2));
 
 % Link 2
-X2 = X1 + cosd(t1) * (a3 * cosd(t23));
-Y2 = Y1 + sind(t1) * (a3 * cosd(t23));
-Z2 = Z1 - (a3 * sind(t23));
+X2 = X1 + cosd(t1) * (a4 * cosd(t23));
+Y2 = Y1 + sind(t1) * (a4 * cosd(t23));
+Z2 = Z1 - (a4 * sind(t23));
 
 % Link 3
-X3 = X2 + cosd(t1) * (a4 * cosd(t234));
-Y3 = Y2 + sind(t1) * (a4 * cosd(t234));
-Z3 = Z2 - (a4 * sind(t234));
+X3 = X2 + cosd(t1) * (a5 * cosd(t234));
+Y3 = Y2 + sind(t1) * (a5 * cosd(t234));
+Z3 = Z2 - (a5 * sind(t234));
 
 % End-Effector Calculation
-Px_factor = a2*cosd(t2) + a3*cosd(t23) + a4*cosd(t234) - d*sind(t234);
+Px_factor = a3*cosd(t2) + a4*cosd(t23) + a5*cosd(t234) - d*sind(t234);
 
 X4 = cosd(t1) * Px_factor;
 Y4 = sind(t1) * Px_factor;
-Z4 = -a2*sind(t2) - a3*sind(t23) - a4*sind(t234) - d*cosd(t234);
+Z4 = -a3*sind(t2) - a4*sind(t23) - a5*sind(t234) - d*cosd(t234);
 
 
 % Plotting
@@ -107,6 +123,16 @@ scatter3(X4, Y4, Z4, 60, [0.2, 0.4, 0.6], 'filled');
 
 % Origin green
 plot3(0, 0, 0, 'go', 'MarkerSize', 10, 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+% Draw links as lines
+plot3([X0, X1], [Y0, Y1], [Z0, Z1], 'k-', 'LineWidth', 3);  % Link 3
+plot3([X1, X2], [Y1, Y2], [Z1, Z2], 'b-', 'LineWidth', 3);  % Link 4
+plot3([X2, X3], [Y2, Y3], [Z2, Z3], 'r-', 'LineWidth', 3);  % Link 5
+plot3([X3, X4], [Y3, Y4], [Z3, Z4], 'g-', 'LineWidth', 3);  % End effector
+
+% Joint markers
+scatter3(X1, Y1, Z1, 60, 'k', 'filled');
+scatter3(X2, Y2, Z2, 60, 'k', 'filled');
+scatter3(X3, Y3, Z3, 60, 'k', 'filled');
 
 % AUV body
 vertices = [
